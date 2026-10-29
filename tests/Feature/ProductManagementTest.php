@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -13,15 +14,35 @@ class ProductManagementTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_example(): void
+
+    public function test_guest_is_redirected_from_products(): void
     {
+        $response = $this->get('/products');
+
+        $response->assertRedirect(route('login'));
+    }
+
+    public function test_authenticated_user_can_view_products(): void
+    {
+        $this->actingAs(User::factory()->create());
+
         $response = $this->get('/products');
 
         $response->assertOk();
     }
 
+    public function test_example(): void
+    {
+        $this->actingAs(User::factory()->create());
+        $response = $this->get('/products');
+
+        $response->assertOk();
+    }
+
+
     public function test_product_can_be_created(): void
     {
+        $this->actingAs(User::factory()->create());
         $response = $this->post('/products', [
             'name' => 'Test Keyboard',
             'sku' => 'TEST-KEY-002',
@@ -38,8 +59,9 @@ class ProductManagementTest extends TestCase
         ]);
     }
 
-     public function test_duplicate_sku_is_rejected(): void
+    public function test_duplicate_sku_is_rejected(): void
     {
+        $this->actingAs(User::factory()->create());
         Product::create([
             'name' => 'First Product',
             'sku' => 'DUP-001',
@@ -59,5 +81,4 @@ class ProductManagementTest extends TestCase
 
         $this->assertDatabaseCount('products', 1);
     }
-
 }
