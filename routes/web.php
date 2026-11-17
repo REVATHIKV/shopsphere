@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Route;
 //     return 'Welcome to ShopSphere';
 // });
 
-Route::get('/', [DashboardController::class, 'index']);
+
 
 Route::middleware('auth')->group(function () {
-
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
