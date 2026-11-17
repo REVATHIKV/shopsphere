@@ -21,11 +21,11 @@ class ExampleTest extends TestCase
     }
 
     public function test_authenticated_user_can_view_dashboard(): void
-{
-    $user = User::factory()->create();
+    {
+        $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/');
+        $response = $this->actingAs($user)->get('/');
 
-    $response->assertStatus(200);
-}
+        $response->assertStatus(200);
+    }
 }
