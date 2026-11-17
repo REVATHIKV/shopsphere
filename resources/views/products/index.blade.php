@@ -103,7 +103,9 @@
 
         </table>
     </div>
-
+<div class="mt-4">
+    {{ $products->links() }}
+</div>
 </div>
 
 <a href="{{ route('dashboard') }}"
