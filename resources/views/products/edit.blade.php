@@ -1,71 +1,123 @@
+   @extends('layouts.app')
+   @section('title', 'Products | ShopSphere')
+   @section('content')
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Product - ShopSphere</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-</head>
-<body class="bg-light">
-<div class="container py-5">
-    <h1 class="mb-4">Edit Product</h1>
+   <div class="mb-4">
+       <h1>Edit Product</h1>
+       <p class="text-muted">
+           Update the details of {{ $product->name }}.
+       </p>
+   </div>
 
-    <form action="{{ route('products.update', $product) }}" method="POST">
-        @csrf
-        @method('PUT')
+   <div class="card shadow-sm">
+       <div class="card-body p-4">
 
-        <div class="mb-3">
-            <label class="form-label">Product Name</label>
-            <input name="name" class="form-control"
-                   value="{{ old('name', $product->name) }}">
-            @error('name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
+           <form action="{{ route('products.update', $product) }}" method="POST">
+               @csrf
+               @method('PUT')
 
-        <div class="mb-3">
-            <label class="form-label">SKU</label>
-            <input name="sku" class="form-control"
-                   value="{{ old('sku', $product->sku) }}">
-            @error('sku')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
+               <div class="mb-3">
+                   <label for="name" class="form-label">Product Name</label>
 
-        <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea name="description" class="form-control">{{ old('description', $product->description) }}</textarea>
-            @error('description')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
+                   <input
+                       type="text"
+                       id="name"
+                       name="name"
+                       class="form-control @error('name') is-invalid @enderror"
+                       value="{{ old('name', $product->name) }}"
+                       required>
 
-        <div class="mb-3">
-            <label class="form-label">Price (₹)</label>
-            <input type="number" name="price" step="0.01" min="0.01"
-                   class="form-control"
-                   value="{{ old('price', $product->price) }}">
-            @error('price')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
+                   @error('name')
+                   <div class="invalid-feedback">{{ $message }}</div>
+                   @enderror
+               </div>
 
-        <div class="mb-3">
-            <label class="form-label">Stock Quantity</label>
-            <input type="number" name="stock_quantity" min="0"
-                   class="form-control"
-                   value="{{ old('stock_quantity', $product->stock_quantity) }}">
-            @error('stock_quantity')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
+               <div class="mb-3">
+                   <label for="sku" class="form-label">SKU</label>
 
-        <button class="btn btn-primary" type="submit">Update Product</button>
-        <a href="{{ route('products.index') }}"
-           class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
-</body>
-</html>
+                   <input
+                       type="text"
+                       id="sku"
+                       name="sku"
+                       class="form-control @error('sku') is-invalid @enderror"
+                       value="{{ old('sku', $product->sku) }}"
+                       required>
+
+                   @error('sku')
+                   <div class="invalid-feedback">{{ $message }}</div>
+                   @enderror
+               </div>
+
+               <div class="mb-3">
+                   <label for="description" class="form-label">Description</label>
+
+                   <textarea
+                       id="description"
+                       name="description"
+                       rows="3"
+                       class="form-control @error('description') is-invalid @enderror">{{ old('description', $product->description) }}</textarea>
+
+                   @error('description')
+                   <div class="invalid-feedback">{{ $message }}</div>
+                   @enderror
+               </div>
+
+               <div class="row">
+
+                   <div class="col-md-6 mb-3">
+                       <label for="price" class="form-label">Price (₹)</label>
+
+                       <input
+                           type="number"
+                           id="price"
+                           name="price"
+                           step="0.01"
+                           min="0.01"
+                           class="form-control @error('price') is-invalid @enderror"
+                           value="{{ old('price', $product->price) }}"
+                           required>
+
+                       @error('price')
+                       <div class="invalid-feedback">{{ $message }}</div>
+                       @enderror
+                   </div>
+
+                   <div class="col-md-6 mb-3">
+                       <label for="stock_quantity" class="form-label">
+                           Stock Quantity
+                       </label>
+
+                       <input
+                           type="number"
+                           id="stock_quantity"
+                           name="stock_quantity"
+                           min="0"
+                           class="form-control @error('stock_quantity') is-invalid @enderror"
+                           value="{{ old('stock_quantity', $product->stock_quantity) }}"
+                           required>
+
+                       @error('stock_quantity')
+                       <div class="invalid-feedback">{{ $message }}</div>
+                       @enderror
+                   </div>
+
+               </div>
+
+               <hr>
+
+               <button type="submit" class="btn btn-primary">
+                   Update Product
+               </button>
+
+               <a href="{{ route('products.index') }}"
+                   class="btn btn-outline-secondary">
+                   Cancel
+               </a>
+
+           </form>
+
+
+       </div>
+   </div>
+
+   @endsection

@@ -10,10 +10,21 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->get();
-        return view('products.index', compact('products'));
+        $search = $request->input('search');
+
+        $products = Product::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('sku', 'LIKE', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->get();
+
+        return view('products.index', compact('products','search'));
     }
 
     /**
@@ -68,8 +79,9 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product) {
+    public function destroy(Product $product)
+    {
         $product->delete();
-        return redirect()->route('products.index')->with('Product Deleted Successfully!!') ;
+        return redirect()->route('products.index')->with('Product Deleted Successfully!!');
     }
 }
