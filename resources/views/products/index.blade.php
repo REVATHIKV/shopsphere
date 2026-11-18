@@ -12,28 +12,51 @@
     </a>
 </div>
 
- <form action="{{ route('products.index') }}" method="GET" class="mb-4">
-    <div class="input-group">
-        <input
-            type="text"
-            name="search"
-            class="form-control"
-            placeholder="Search by product name or SKU..."
-            value="{{ $search ?? '' }}"
-        >
 
-        <button type="submit" class="btn btn-dark">
-            Search
-        </button>
+<form action="{{ route('products.index') }}" method="GET" class="mb-4">
 
-        @if (!empty($search))
+    <div class="row g-2">
+
+        <div class="col-md-5">
+            <input
+                type="text"
+                name="search"
+                class="form-control"
+                placeholder="Search by product name or SKU..."
+                value="{{ $search ?? '' }}">
+        </div>
+
+        <div class="col-md-4">
+            <select name="category_id" class="form-select">
+                <option value="">All Categories</option>
+
+                @foreach ($categories as $category)
+                <option
+                    value="{{ $category->id }}"
+                    {{ $categoryId == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-dark">
+                Filter
+            </button>
+
+            @if (!empty($search) || !empty($categoryId))
             <a href="{{ route('products.index') }}"
-               class="btn btn-outline-secondary">
+                class="btn btn-outline-secondary">
                 Clear
             </a>
-        @endif
+            @endif
+        </div>
+
     </div>
+
 </form>
+
 
 
 <div class="card shadow-sm">
@@ -45,6 +68,7 @@
                 <tr>
                     <th>Name</th>
                     <th>SKU</th>
+                    <th>Category</th>
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Actions</th>
@@ -58,6 +82,7 @@
                 <tr>
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->sku }}</td>
+                     <td>{{ $product->category ?->name ?? 'Uncategorized' }}</td>
                     <td>₹{{ number_format($product->price, 2) }}</td>
                     <td> @if($product->stock_quantity === 0)
                         <span class="badge bg-danger">Out of Stock</span>
@@ -93,7 +118,7 @@
 
                 <tr>
                     <td colspan="5" class="text-center py-4">
-                        No products found. Add your first product!
+                          No products found. Try changing your search or category filter.
                     </td>
                 </tr>
 
@@ -103,9 +128,9 @@
 
         </table>
     </div>
-<div class="mt-4">
-    {{ $products->links() }}
-</div>
+    <div class="mt-4">
+        {{ $products->links() }}
+    </div>
 </div>
 
 <a href="{{ route('dashboard') }}"
